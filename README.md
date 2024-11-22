@@ -1,1 +1,1 @@
-# cirq-custom-api
+# Cirq-nextjs-python-application
