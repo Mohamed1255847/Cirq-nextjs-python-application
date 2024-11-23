@@ -2,12 +2,15 @@ from flask import Flask, jsonify, request
 import subprocess
 import sys
 import cirq
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}) # to allow NextJs to fetch data 
 
 # Global variable to store the circuit (for simplicity)
 stored_circuit = None
 stored_qubit = None
+
 
 # Function to ensure Cirq is installed
 def ensure_cirq_installed():
@@ -17,6 +20,18 @@ def ensure_cirq_installed():
         print("installing cirq...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "cirq"])
         print("installed cirq.")
+
+@app.before_request
+def log_request_info():
+    print(f"Method: {request.method}")
+    print(f"URL: {request.url}")
+    print(f"Headers: {request.headers}")
+    print(f"Body: {request.get_data()}")
+
+
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({"message": "Flask server is running!"})
 
 # Endpoint 1: Set up the circuit
 @app.route('/setup-circuit', methods=['POST'])
