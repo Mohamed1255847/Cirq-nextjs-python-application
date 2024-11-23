@@ -46,4 +46,5 @@ yarn
 ```bash
 yarn dev
 ```
+### then open http://localhost:3000/
 ![image](https://github.com/user-attachments/assets/6117ae4e-24dc-495e-b281-3cd58be7850c)
