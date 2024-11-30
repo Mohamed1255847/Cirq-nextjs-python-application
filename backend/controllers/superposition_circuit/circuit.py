@@ -45,11 +45,9 @@ def run_cirq():
         if not stored_circuit or not stored_qubit:
             return jsonify({"error": "Circuit not set up. Please call /setup-circuit first."}), 400
 
-        # Simulate the circuit
         simulator = cirq.Simulator()
         result = simulator.run(stored_circuit, repetitions=20)
 
-        # Return the simulation results
         result_json = {"measurements": result.measurements["m"].tolist()}
         return jsonify({
             "message": "Simulation run successfully",
