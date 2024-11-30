@@ -8,8 +8,6 @@ export default function Home() {
   const [setupCircuit, { data: setupData, isSuccess: isSetupSuccess, isError: setupError }] = useSetupCircuitMutation();
   const [runCircuit, { data: runData, isError: runError }] = useRunCircuitMutation();
 
-  console.log({ setupData, runData, setupError, runError });
-
   return (
     <div className={styles.page}>
       <Stack spacing={2} direction="row">
@@ -19,7 +17,7 @@ export default function Home() {
         <h1>{setupData?.message}</h1>
         <h1>{setupData?.circuit}</h1>
         {isSetupSuccess && !setupError && (
-          <Button key="run" onClick={runCircuit} variant="contained">
+          <Button style={{ background: 'yellow', color: 'black' }} key="run" onClick={runCircuit} variant="contained">
             Run the Circuit
           </Button>
         )}
