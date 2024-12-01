@@ -1,14 +1,12 @@
 from flask import Flask, jsonify, request
 import subprocess
 import sys
-import cirq
+import numpy as np
 from flask_cors import CORS
-from controllers.superposition_circuit.circuit import setup_circuit, run_cirq,stored_circuit,stored_qubit 
+from controllers.superposition_circuit.circuit import setup_circuit, run_cirq
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}) # to allow NextJs to fetch data 
 
-stored_circuit = None
-stored_qubit = None
 
 def ensure_cirq_installed(): 
     try:
