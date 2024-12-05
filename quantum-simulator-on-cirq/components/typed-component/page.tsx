@@ -27,7 +27,7 @@ const TypingEffect: React.FC = () => {
                 <Typist.Backspace count={20} delay={1000} />
                 Mohamed Afify
                 <Typist.Backspace count={20} delay={1000} />
-                Andreea Florentina
+                Andreea Stancu
                 <Typist.Backspace count={20} delay={1000} />
                 Mihai Neagu
                 <Typist.Backspace count={20} delay={1000} />
