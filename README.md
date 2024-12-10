@@ -6,11 +6,18 @@ This project combines a **Python backend** with a **Next.js front-end** to creat
 
 ## Backend: Running the API
 
+
 ```bash
 # Step 1: Navigate to the root folder, then into the backend directory
 cd backend
-
-# Step 2: Run the API
+# Step 2: install flask_cors 
+pip install flask_cors
+or using docs https://flask-cors.readthedocs.io/en/v1.1/
+# Step 3: install flask
+pip install flask
+or using docs https://flask.palletsprojects.com/en/stable/installation/#install-flask 
+cd backend
+# Step 4: Run the API
 python3 app.py
 # OR
 python app.py
