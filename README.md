@@ -15,7 +15,8 @@ pip install flask_cors
 or using docs https://flask-cors.readthedocs.io/en/v1.1/
 # Step 3: install flask
 pip install flask
-or using docs https://flask.palletsprojects.com/en/stable/installation/#install-flask 
+or using docs https://flask.palletsprojects.com/en/stable/installation
+#install-flask 
 cd backend
 # Step 4: Run the API
 python3 app.py
