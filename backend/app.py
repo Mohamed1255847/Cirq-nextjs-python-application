@@ -3,13 +3,26 @@ import subprocess
 import sys
 import numpy as np
 from flask_cors import CORS
+import cirq
 from controllers.superposition_circuit.circuit import setup_circuit, run_cirq
 from controllers.quantum_Single_Qubit_Gates.quantam_gates_info import gates_info
+from controllers.circuits.circuit_bell_state import create_bell_state_circuit
+
+# from controllers.circuits.grover_circuit import create_grover_circuit
+from controllers.circuits.basic_gates import create_basic_gates_circuit
+from controllers.circuits.qft_circuit import create_qft_circuit
+from controllers.circuits.teleportation import create_teleportation_circuit
+from controllers.circuits.vqe import create_vqe_circuit
+from controllers.circuits.phase_estimation import create_phase_estimation_circuit
+from controllers.circuits.deutsch_jozsa import create_deutsch_jozsa_circuit
+from controllers.circuits.entanglement_swapping import (
+    create_entanglement_swapping_circuit,
+)
+from controllers.circuits.circuit_info import get_circuit_info
+
 
 app = Flask(__name__)
-CORS(
-    app, resources={r"/*": {"origins": "http://localhost:3000"}}
-)  # to allow NextJs to fetch data
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 
 def ensure_cirq_installed():
@@ -19,6 +32,12 @@ def ensure_cirq_installed():
         print("installing cirq...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "cirq"])
         print("installed cirq.")
+
+
+def run_circuit(circuit):
+    simulator = cirq.Simulator()
+    result = simulator.run(circuit, repetitions=100)
+    return result.histogram(key="result")
 
 
 @app.before_request
@@ -40,7 +59,6 @@ def handle_setup_circuit():
     return setup_circuit()
 
 
-# superposition_circuit
 @app.route("/run-cirq", methods=["POST"])
 def handle_run_cirq():
     return run_cirq()
@@ -82,5 +100,73 @@ def t_gate_info():
     return jsonify({"name": "T Gate", **gate_info})
 
 
+@app.route("/bellStateCircuit", methods=["GET"])
+def bell_state_circuit():
+    circuit = create_bell_state_circuit()
+    result = run_circuit(circuit)
+    result_dict = result.histogram(key="result")
+    return jsonify({"circuit": str(circuit), "results": result_dict})
+
+
+@app.route("/basicGatesCircuit", methods=["GET"])
+def basic_gates_circuit():
+    circuit = create_basic_gates_circuit()
+    result = run_circuit(circuit)
+    return jsonify({"circuit": str(circuit), "results": result})
+
+
+@app.route("/qftCircuit", methods=["GET"])
+def qft_circuit():
+    circuit = create_qft_circuit()
+    result = run_circuit(circuit)
+    return jsonify({"circuit": str(circuit), "results": result})
+
+
+@app.route("/teleportationCircuit", methods=["GET"])
+def teleportation_circuit():
+    circuit = create_teleportation_circuit()
+    result = run_circuit(circuit)
+    return jsonify({"circuit": str(circuit), "results": result})
+
+
+@app.route("/vqeCircuit", methods=["GET"])
+def vqe_circuit():
+    circuit = create_vqe_circuit()
+    result = run_circuit(circuit)
+    return jsonify({"circuit": str(circuit), "results": result})
+
+
+@app.route("/phaseEstimationCircuit", methods=["GET"])
+def phase_estimation_circuit():
+    circuit = create_phase_estimation_circuit()
+    result = run_circuit(circuit)
+    return jsonify({"circuit": str(circuit), "results": result})
+
+
+@app.route("/deutschJozsaCircuit", methods=["GET"])
+def deutsch_jozsa_circuit():
+    circuit = create_deutsch_jozsa_circuit()
+    result = run_circuit(circuit)
+    return jsonify({"circuit": str(circuit), "results": result})
+
+
+@app.route("/entanglementSwappingCircuit", methods=["GET"])
+def entanglement_swapping_circuit():
+    circuit = create_entanglement_swapping_circuit()
+    result = run_circuit(circuit)
+    result_dict = result.histogram(key="result")
+    return jsonify({"circuit": str(circuit), "results": result_dict})
+
+
+@app.route("/info/<circuit_name>", methods=["GET"])
+def circuit_info(circuit_name):
+    info = get_circuit_info(circuit_name)
+    if info:
+        return jsonify(info)
+    else:
+        return jsonify({"error": "Circuit not found"}), 404
+
+
 if __name__ == "__main__":
+    ensure_cirq_installed()
     app.run(debug=True)
