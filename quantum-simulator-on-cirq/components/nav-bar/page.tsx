@@ -6,7 +6,7 @@ import { FC } from 'react';
 
 interface NavLinkProps {
   href: string;
-  isactive?: boolean; // Note the optional isactive prop
+  isactive?: boolean;
 }
 
 const Navbar: FC = () => {
@@ -19,7 +19,7 @@ const Navbar: FC = () => {
         <NavItem href="/" isactive={pathname === '/'}>Home</NavItem>
         <NavItem href="/circuits" isactive={pathname === '/circuits'}>Circuits</NavItem>
         <NavItem href="/gates" isactive={pathname === '/gates'}>Gates</NavItem>
-        <NavItem href="/blochsphere" isactive={pathname === '/blochsphere'}>BlochSphere</NavItem>
+        <NavItem href="/blochSphere" isactive={pathname === '/blochSphere'}>BlochSphere</NavItem>
       </NavLinks>
     </Nav>
   );
@@ -44,14 +44,12 @@ const NavLinks = styled.div`
   gap: 20px;
 `;
 
-const NavItem = styled(Link).attrs<NavLinkProps>((props: { isactive: boolean; }) => ({
-  isactive: props.isactive ? true : undefined,
-})) <NavLinkProps>`
+const NavItem = styled(Link)<NavLinkProps>`
   color: #000;
   text-decoration: none;
   font-size: 1.2em;
   font-weight: bold;
-  border-bottom: ${({ isactive }: { isactive: boolean; }) => isactive ? '2px solid #000' : '2px solid transparent'};
+  border-bottom: ${({ isactive }) => (isactive ? '2px solid #000' : '2px solid transparent')};
   padding-bottom: 5px;
   transition: border-bottom 0.3s;
 

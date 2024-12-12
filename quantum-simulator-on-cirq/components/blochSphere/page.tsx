@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Sphere, Line, Html } from '@react-three/drei';
-import { multiply, abs, arg, atan2 } from 'mathjs';
+import { multiply, abs, arg } from 'mathjs';
 
 interface Axis {
   from: [number, number, number];
@@ -9,15 +9,6 @@ interface Axis {
   color: string;
   label: string;
 }
-
-const hadamard = [
-  [1 / Math.sqrt(2), 1 / Math.sqrt(2)],
-  [1 / Math.sqrt(2), -1 / Math.sqrt(2)],
-];
-
-const applyUnitary = (unitary: number[][], state: number[]) => {
-  return multiply(unitary, state);
-};
 
 const getBlochCoordinates = (state: number[]) => {
   const theta = 2 * Math.acos(abs(state[0]));
@@ -31,14 +22,11 @@ const getBlochCoordinates = (state: number[]) => {
   };
 };
 
-export const BlochSphere: React.FC = () => {
-  const [qubitState, setQubitState] = useState([1, 0]); // Initial state |0⟩
+interface BlochSphereProps {
+  qubitState: number[]; // Quantum state passed as props
+}
 
-  useEffect(() => {
-    const newState = applyUnitary(hadamard, qubitState);
-    setQubitState(newState);
-  }, []);
-
+export const BlochSphere: React.FC<BlochSphereProps> = ({ qubitState }) => {
   const { x, y, z, theta, phi } = getBlochCoordinates(qubitState);
 
   const radius = 1;
@@ -70,11 +58,15 @@ export const BlochSphere: React.FC = () => {
           </Html>
         </Line>
       ))}
-      {/* Qubit Position */}
-      <mesh position={[x, y, z]}>
-        <sphereGeometry args={[0.05, 32, 32]} />
-        <meshStandardMaterial color={'yellow'} />
-      </mesh>
+      {/* State Vector as Arrow */}
+      <Line
+        points={[
+          [0, 0, 0], // Starting point of the vector
+          [x, y, z], // End point of the vector (based on state)
+        ]}
+        color="yellow"
+        lineWidth={4}
+      />
       {/* Theta and Phi Information */}
       <Html position={[x, y, z]} center>
         <div style={{ color: 'white', backgroundColor: 'black', padding: '4px', borderRadius: '4px' }}>

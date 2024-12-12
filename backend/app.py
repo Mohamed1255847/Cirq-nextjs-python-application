@@ -16,7 +16,7 @@ from controllers.circuits.vqe import create_vqe_circuit
 from controllers.circuits.phase_estimation import create_phase_estimation_circuit
 from controllers.circuits.deutsch_jozsa import create_deutsch_jozsa_circuit
 from controllers.circuits.entanglement_swapping import (
-    create_entanglement_swapping_circuit,
+run_entanglement_swapping
 )
 from controllers.circuits.circuit_info import get_circuit_info
 
@@ -152,10 +152,50 @@ def deutsch_jozsa_circuit():
 
 @app.route("/entanglementSwappingCircuit", methods=["GET"])
 def entanglement_swapping_circuit():
-    circuit = create_entanglement_swapping_circuit()
-    result = run_circuit(circuit)
-    result_dict = result.histogram(key="result")
-    return jsonify({"circuit": str(circuit), "results": result_dict})
+    data = run_entanglement_swapping()
+    result = data["result"]
+    circuit = data["circuit"]
+    result_dict = result.histogram(key='m1')  # Ensure the key matches your measurement key
+
+    # Annotated circuit description
+    circuit_description = """
+    Qubit Initialization:
+    - Qubits [0, 0]: Starting point for the first qubit.
+    - Qubits [1, 0]: Starting point for the second qubit.
+    - Qubits [2, 0]: Starting point for the third qubit.
+    - Qubits [3, 0]: Starting point for the fourth qubit.
+
+    Gate Operations:
+    - H (Hadamard Gate): This gate puts a qubit into a superposition of states.
+    - @ (CNOT Gate Control): Control qubit for the CNOT operation.
+    - X (CNOT Gate Target): Target qubit for the CNOT operation.
+    - M (Measurement): Measures the state of the qubit.
+
+    Circuit Symbol Breakdown:
+    - H Gate: Applies a Hadamard operation which puts a qubit into an equal superposition state.
+    - @ (CNOT Control) and X (CNOT Target): The CNOT (Controlled-NOT) gate flips the target qubit if the control qubit is in state 1.
+    - Bell Measurement: The CNOT followed by a Hadamard gate measures in the Bell basis.
+    - Measurement (M): Reads the state of the qubit. The results are stored under the keys m1 and m2.
+
+    Annotated Circuit:
+    ───H───@─────────────@────@───
+           │             ║    ║
+    ───────X───@───H────M╫────╫───
+               │        ║║    ║
+    ───H───@───X───M────╫╫────╫───
+           │       ║    ║║    ║
+    ───────X───────╫────╫X────@───
+                   ║    ║║    ║
+    m1: ═══════════╬════@╬════^═══
+                   ║     ║
+    m2: ═══════════@═════^════════
+    """
+
+    return jsonify({
+        "circuit": str(circuit),
+        "description": circuit_description,
+        "results": result_dict
+    })
 
 
 @app.route("/info/<circuit_name>", methods=["GET"])
