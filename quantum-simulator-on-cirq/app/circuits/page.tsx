@@ -2,7 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useSetupCircuitMutation, useRunCircuitMutation } from '@/feature/api';
+import {
+  useSetupCircuitMutation,
+  useRunCircuitMutation,
+  useBellStateCircuitQuery,
+  useBasicGatesCircuitQuery,
+  useQftCircuitQuery,
+  useTeleportationCircuitQuery,
+  useVqeCircuitQuery,
+  usePhaseEstimationCircuitQuery,
+  useDeutschJozsaCircuitQuery,
+  useEntanglementSwappingCircuitQuery,
+} from '@/feature/api';
 
 // Types
 interface Circuit {
@@ -12,11 +23,16 @@ interface Circuit {
   circuit: string;
 }
 
-// Example data (You can replace this with your actual circuits data)
 const circuitOptions: Circuit[] = [
-  { id: 1, name: 'Circuit 1', message: '', circuit: '' },
-  { id: 2, name: 'Circuit 2', message: '', circuit: '' },
-  // Add more circuits as needed
+  { id: 1, name: 'Circuit 1', message: '', circuit: '(0, 0): ───X^0.5───M(\'m\')───' },
+  { id: 3, name: 'Bell State Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
+  { id: 4, name: 'Basic Gates Circuit', message: '', circuit: '(1, 0): ───X───Y───Z───M(\'m\')───' },
+  { id: 5, name: 'QFT Circuit', message: '', circuit: '(0, 0): ───H───S───T───M(\'m\')───' },
+  { id: 6, name: 'Teleportation Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
+  { id: 7, name: 'VQE Circuit', message: '', circuit: '(0, 0): ───H───X───Y───Z───M(\'m\')───' },
+  { id: 8, name: 'Phase Estimation Circuit', message: '', circuit: '(0, 0): ───H───S───T───M(\'m\')───' },
+  { id: 9, name: 'Deutsch-Jozsa Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
+  { id: 10, name: 'Entanglement Swapping Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
 ];
 
 // Styled components
@@ -86,11 +102,98 @@ const Error = styled.h1`
   color: red;
 `;
 
+// Styled components for the quantum circuit visualization
+const QuantumCircuitContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  background-color: #fff;
+  border: 2px solid #343a40;
+  border-radius: 10px;
+  width: fit-content;
+`;
+
+const QubitLine = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+const Qubit = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 1px solid #343a40;
+  border-radius: 50%;
+  margin-right: 10px;
+  background-color: #343a40;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+`;
+
+const Operation = styled.div`
+  padding: 5px 10px;
+  background-color: ${({ type }) => (type === 'measurement' ? '#28a745' : '#007bff')};
+  color: white;
+  margin-right: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+// QuantumCircuit Component
+const QuantumCircuit = ({ circuit }) => {
+  // Parse the circuit string to extract gates and measurements
+  const operations = circuit.match(/X\^0\.5|M\('m'\)|H|X|Y|Z|S|T/g) || [];
+
+  return (
+    <QuantumCircuitContainer>
+      <QubitLine>
+        <Qubit>Q0</Qubit>
+        {operations.map((op, idx) => (
+          <Operation key={idx} type={op.startsWith('M') ? 'measurement' : 'gate'}>
+            {op}
+          </Operation>
+        ))}
+      </QubitLine>
+    </QuantumCircuitContainer>
+  );
+};
+
 export default function CircuitsPage() {
   const [selectedCircuit, setSelectedCircuit] = useState<Circuit | null>(null);
 
   const [setupCircuit, { data: setupData, isError: setupError }] = useSetupCircuitMutation();
   const [runCircuit, { data: runData, isError: runError }] = useRunCircuitMutation();
+  const { data: bellStateData } = useBellStateCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 3,
+  });
+  const { data: basicGatesData } = useBasicGatesCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 4,
+  });
+  const { data: qftData } = useQftCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 5,
+  });
+  const { data: teleportationData } = useTeleportationCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 6,
+  });
+  const { data: vqeData } = useVqeCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 7,
+  });
+  const { data: phaseEstimationData } = usePhaseEstimationCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 8,
+  });
+  const { data: deutschJozsaData } = useDeutschJozsaCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 9,
+  });
+  const { data: entanglementSwappingData } = useEntanglementSwappingCircuitQuery(undefined, {
+    skip: selectedCircuit?.id !== 10,
+  });
 
   useEffect(() => {
     if (selectedCircuit) {
@@ -139,11 +242,84 @@ export default function CircuitsPage() {
                 <Info>{runData.circuit}</Info>
               </>
             )}
+            {bellStateData && selectedCircuit.id === 3 && (
+              <>
+                <Title>Bell State Circuit Result:</Title>
+                <Info>{bellStateData.name}</Info>
+                <Info>{bellStateData.description}</Info>
+                <Info>Circuit: {bellStateData.circuit}</Info>
+                <Info>Results: {JSON.stringify(bellStateData.results)}</Info>
+              </>
+            )}
+            {basicGatesData && selectedCircuit.id === 4 && (
+              <>
+                <Title>Basic Gates Circuit Result:</Title>
+                <Info>{basicGatesData.name}</Info>
+                <Info>{basicGatesData.description}</Info>
+                <Info>Circuit: {basicGatesData.circuit}</Info>
+                <Info>Results: {JSON.stringify(basicGatesData.results)}</Info>
+              </>
+            )}
+            {qftData && selectedCircuit.id === 5 && (
+              <>
+                <Title>QFT Circuit Result:</Title>
+                <Info>{qftData.name}</Info>
+                <Info>{qftData.description}</Info>
+                <Info>Circuit: {qftData.circuit}</Info>
+                <Info>Results: {JSON.stringify(qftData.results)}</Info>
+              </>
+            )}
+            {teleportationData && selectedCircuit.id === 6 && (
+              <>
+                <Title>Teleportation Circuit Result:</Title>
+                <Info>{teleportationData.name}</Info>
+                <Info>{teleportationData.description}</Info>
+                <Info>Circuit: {teleportationData.circuit}</Info>
+                <Info>Results: {JSON.stringify(teleportationData.results)}</Info>
+              </>
+            )}
+            {vqeData && selectedCircuit.id === 7 && (
+              <>
+                <Title>VQE Circuit Result:</Title>
+                <Info>{vqeData.name}</Info>
+                <Info>{vqeData.description}</Info>
+                <Info>Circuit: {vqeData.circuit}</Info>
+                <Info>Results: {JSON.stringify(vqeData.results)}</Info>
+              </>
+            )}
+            {phaseEstimationData && selectedCircuit.id === 8 && (
+              <>
+                <Title>Phase Estimation Circuit Result:</Title>
+                <Info>{phaseEstimationData.name}</Info>
+                <Info>{phaseEstimationData.description}</Info>
+                <Info>Circuit: {phaseEstimationData.circuit}</Info>
+                <Info>Results: {JSON.stringify(phaseEstimationData.results)}</Info>
+              </>
+            )}
+            {deutschJozsaData && selectedCircuit.id === 9 && (
+              <>
+                <Title>Deutsch-Jozsa Circuit Result:</Title>
+                <Info>{deutschJozsaData.name}</Info>
+                <Info>{deutschJozsaData.description}</Info>
+                <Info>Circuit: {deutschJozsaData.circuit}</Info>
+                <Info>Results: {JSON.stringify(deutschJozsaData.results)}</Info>
+              </>
+            )}
+            {entanglementSwappingData && selectedCircuit.id === 10 && (
+              <>
+                <Title>Entanglement Swapping Circuit Result:</Title>
+                <Info>{entanglementSwappingData.name}</Info>
+                <Info>{entanglementSwappingData.description}</Info>
+                <Info>Circuit: {entanglementSwappingData.circuit}</Info>
+                <Info>Results: {JSON.stringify(entanglementSwappingData.results)}</Info>
+              </>
+            )}
+            <QuantumCircuit circuit={selectedCircuit.circuit} />
           </>
         ) : (
           <Title>Select a circuit to see its details.</Title>
         )}
-        {setupError && <Error>Error in setup the circuit</Error>}
+        {setupError && <Error>Error in setting up the circuit</Error>}
         {runError && <Error>Error in running the circuit</Error>}
       </CircuitDetails>
     </Container>
