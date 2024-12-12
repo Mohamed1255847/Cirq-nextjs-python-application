@@ -2,22 +2,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const circuitApi = createApi({
   reducerPath: "circuitApi",
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://127.0.0.1:5000'}),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://127.0.0.1:5000" }),
   endpoints: (builder) => ({
-    // Existing endpoints
-    setupCircuit: builder.mutation({
+    simpleQuantumCircuit: builder.query({
       query: () => ({
-        url: "/setup-circuit",
-        method: "POST",
+        url: "/simplequantumcircuit",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-      }),
-    }),
-    runCircuit: builder.mutation({
-      query: () => ({
-        url: "/run-cirq",
-        method: "POST",
       }),
     }),
     hadamardGate: builder.query({
@@ -71,8 +64,6 @@ export const circuitApi = createApi({
         },
       }),
     }),
-
-    // Additional endpoints
     bellStateCircuit: builder.query({
       query: () => ({
         url: "/bellStateCircuit",
@@ -131,15 +122,13 @@ export const circuitApi = createApi({
 });
 
 export const {
-  useSetupCircuitMutation,
-  useRunCircuitMutation,
   useHadamardGateQuery,
   useXGateQuery,
   usePauliYGateQuery,
   usePauliZGateQuery,
   usePhaseGateQuery,
   useTGateQuery,
-  useBellStateCircuitQuery,  // New hooks for additional endpoints
+  useBellStateCircuitQuery,
   useBasicGatesCircuitQuery,
   useQftCircuitQuery,
   useTeleportationCircuitQuery,
@@ -154,4 +143,15 @@ export const {
   useLazyPhaseGateQuery,
   useLazyTGateQuery,
   useLazyXGateQuery,
+  useLazyBasicGatesCircuitQuery,
+  useLazyBellStateCircuitQuery,
+  useLazyCircuitInfoQuery,
+  useLazyDeutschJozsaCircuitQuery,
+  useLazyEntanglementSwappingCircuitQuery,
+  useLazyPhaseEstimationCircuitQuery,
+  useLazyQftCircuitQuery,
+  useLazyTeleportationCircuitQuery,
+  useLazySimpleQuantumCircuitQuery,
+  useLazyVqeCircuitQuery,
+  useSimpleQuantumCircuitQuery,
 } = circuitApi;

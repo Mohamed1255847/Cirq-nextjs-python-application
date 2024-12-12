@@ -6,4 +6,6 @@ def create_phase_estimation_circuit():
     circuit.append(cirq.H.on_each(*qubits))
     for k, q in enumerate(qubits):
         circuit.append(cirq.X(q) ** (2 ** k))
+    circuit.append(cirq.measure(*qubits, key='result'))
     return circuit
+
