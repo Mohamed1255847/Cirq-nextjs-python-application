@@ -20,10 +20,9 @@ import {circuitOptions} from './constants';
 export default function CircuitsPage() {
   const [selectedCircuit, setSelectedCircuit] = useState<Circuit | null>(null);
 
-const { data: simplestQuantamCircuteData,error } = useSimpleQuantumCircuitQuery(undefined, {
+const { data: simplestQuantamCircuteData } = useSimpleQuantumCircuitQuery(undefined, {
   skip: selectedCircuit?.id !== 2,
 });
-console.log({simplestQuantamCircuteData,error})
   const { data: bellStateData } = useBellStateCircuitQuery(undefined, {
     skip: selectedCircuit?.id !== 3,
   });
