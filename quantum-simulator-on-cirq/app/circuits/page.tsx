@@ -239,64 +239,79 @@ export default function CircuitsPage() {
               <>
                 <Title>Run Result:</Title>
                 <Info>{runData.message}</Info>
-
                 <Info>{runData.circuit}</Info>
               </>
             )}
             {bellStateData && selectedCircuit.id === 3 && (
               <>
                 <Title>Bell State Circuit Result:</Title>
-                <Info>{bellStateData.circuit}</Info>
-                <Info>{bellStateData.results}</Info>
+                <Info>{bellStateData.name}</Info>
+                <Info>{bellStateData.description}</Info>
+                <Info>Circuit: {bellStateData.circuit}</Info>
+                <Info>Results: {JSON.stringify(bellStateData.results)}</Info>
               </>
             )}
             {basicGatesData && selectedCircuit.id === 4 && (
               <>
                 <Title>Basic Gates Circuit Result:</Title>
-                <Info>{basicGatesData.circuit}</Info>
-                <Info>{basicGatesData.results}</Info>
+                <Info>{basicGatesData.name}</Info>
+                <Info>{basicGatesData.description}</Info>
+                <Info>Circuit: {basicGatesData.circuit}</Info>
+                <Info>Results: {JSON.stringify(basicGatesData.results)}</Info>
               </>
             )}
             {qftData && selectedCircuit.id === 5 && (
               <>
                 <Title>QFT Circuit Result:</Title>
-                <Info>{qftData.circuit}</Info>
-                <Info>{qftData.results}</Info>
+                <Info>{qftData.name}</Info>
+                <Info>{qftData.description}</Info>
+                <Info>Circuit: {qftData.circuit}</Info>
+                <Info>Results: {JSON.stringify(qftData.results)}</Info>
               </>
             )}
             {teleportationData && selectedCircuit.id === 6 && (
               <>
                 <Title>Teleportation Circuit Result:</Title>
-                <Info>{teleportationData.circuit}</Info>
-                <Info>{teleportationData.results}</Info>
+                <Info>{teleportationData.name}</Info>
+                <Info>{teleportationData.description}</Info>
+                <Info>Circuit: {teleportationData.circuit}</Info>
+                <Info>Results: {JSON.stringify(teleportationData.results)}</Info>
               </>
             )}
             {vqeData && selectedCircuit.id === 7 && (
               <>
                 <Title>VQE Circuit Result:</Title>
-                <Info>{vqeData.circuit}</Info>
-                <Info>{vqeData.results}</Info>
+                <Info>{vqeData.name}</Info>
+                <Info>{vqeData.description}</Info>
+                <Info>Circuit: {vqeData.circuit}</Info>
+                <Info>Results: {JSON.stringify(vqeData.results)}</Info>
               </>
             )}
             {phaseEstimationData && selectedCircuit.id === 8 && (
               <>
                 <Title>Phase Estimation Circuit Result:</Title>
-                <Info>{phaseEstimationData.circuit}</Info>
-                <Info>{phaseEstimationData.results}</Info>
+                <Info>{phaseEstimationData.name}</Info>
+                <Info>{phaseEstimationData.description}</Info>
+                <Info>Circuit: {phaseEstimationData.circuit}</Info>
+                <Info>Results: {JSON.stringify(phaseEstimationData.results)}</Info>
               </>
             )}
             {deutschJozsaData && selectedCircuit.id === 9 && (
               <>
                 <Title>Deutsch-Jozsa Circuit Result:</Title>
-                <Info>{deutschJozsaData.circuit}</Info>
-                <Info>{deutschJozsaData.results}</Info>
+                <Info>{deutschJozsaData.name}</Info>
+                <Info>{deutschJozsaData.description}</Info>
+                <Info>Circuit: {deutschJozsaData.circuit}</Info>
+                <Info>Results: {JSON.stringify(deutschJozsaData.results)}</Info>
               </>
             )}
             {entanglementSwappingData && selectedCircuit.id === 10 && (
               <>
                 <Title>Entanglement Swapping Circuit Result:</Title>
-                <Info>{entanglementSwappingData.circuit}</Info>
-                <Info>{entanglementSwappingData.results}</Info>
+                <Info>{entanglementSwappingData.name}</Info>
+                <Info>{entanglementSwappingData.description}</Info>
+                <Info>Circuit: {entanglementSwappingData.circuit}</Info>
+                <Info>Results: {JSON.stringify(entanglementSwappingData.results)}</Info>
               </>
             )}
             <QuantumCircuit circuit={selectedCircuit.circuit} />
