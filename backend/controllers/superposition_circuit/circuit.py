@@ -1,9 +1,7 @@
-from flask import jsonify
+from flask import Flask, jsonify
 import cirq
 
-stored_circuit = None
-stored_qubit = None
-
+app = Flask(__name__)
 
 def ensure_cirq_installed():
     try:
@@ -11,46 +9,35 @@ def ensure_cirq_installed():
     except ImportError:
         import subprocess
         import sys
-
         print("installing cirq...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", "cirq"])
         print("installed cirq.")
 
-
-def setup_circuit():
-    global stored_circuit, stored_qubit
-
+def simple_quantum_circuit():
     try:
         ensure_cirq_installed()
-        stored_qubit = cirq.GridQubit(0, 0)
-        stored_circuit = cirq.Circuit(
-            cirq.X(stored_qubit) ** 0.5, cirq.measure(stored_qubit, key="m")
+        qubit = cirq.GridQubit(0, 0)
+        circuit = cirq.Circuit(
+            cirq.X(qubit) ** 0.5, 
+            cirq.measure(qubit, key="m")
         )
-
-        return jsonify(
-            {"message": "Circuit created successfully", "circuit": str(stored_circuit)}
-        )
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-def run_cirq():
-    global stored_circuit, stored_qubit
-
-    try:
-        if not stored_circuit or not stored_qubit:
-            return jsonify(
-                {"error": "Circuit not set up. Please call /setup-circuit first."}
-            ), 400
-
+        circuit_description = "A simple quantum circuit"
+        
         simulator = cirq.Simulator()
-        result = simulator.run(stored_circuit, repetitions=20)
-
+        result = simulator.run(circuit, repetitions=20)
         result_json = {"measurements": result.measurements["m"].tolist()}
-        return jsonify(
-            {"message": "Simulation run successfully", "results": result_json}
-        )
+        
+        return jsonify({
+            "name": "Simple Quantum Circuit",
+            "description": circuit_description,
+            "circuit": str(circuit),
+            "results": result_json
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

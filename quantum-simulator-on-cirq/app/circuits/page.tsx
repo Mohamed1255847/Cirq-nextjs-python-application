@@ -1,10 +1,6 @@
 'use client';
-
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import { useState } from 'react';
 import {
-  useSetupCircuitMutation,
-  useRunCircuitMutation,
   useBellStateCircuitQuery,
   useBasicGatesCircuitQuery,
   useQftCircuitQuery,
@@ -13,163 +9,21 @@ import {
   usePhaseEstimationCircuitQuery,
   useDeutschJozsaCircuitQuery,
   useEntanglementSwappingCircuitQuery,
+  useSimpleQuantumCircuitQuery,
 } from '@/feature/api';
+import {Circuit} from './types';
+import {CircuitButton , CircuitDetails,CircuitList,Container,Info,Title} from './parts';
+import {QuantumCircuit} from './helpers';
+import {circuitOptions} from './constants';
 
-// Types
-interface Circuit {
-  id: number;
-  name: string;
-  message: string;
-  circuit: string;
-}
-
-const circuitOptions: Circuit[] = [
-  { id: 1, name: 'Circuit 1', message: '', circuit: '(0, 0): ───X^0.5───M(\'m\')───' },
-  { id: 3, name: 'Bell State Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
-  { id: 4, name: 'Basic Gates Circuit', message: '', circuit: '(1, 0): ───X───Y───Z───M(\'m\')───' },
-  { id: 5, name: 'QFT Circuit', message: '', circuit: '(0, 0): ───H───S───T───M(\'m\')───' },
-  { id: 6, name: 'Teleportation Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
-  { id: 7, name: 'VQE Circuit', message: '', circuit: '(0, 0): ───H───X───Y───Z───M(\'m\')───' },
-  { id: 8, name: 'Phase Estimation Circuit', message: '', circuit: '(0, 0): ───H───S───T───M(\'m\')───' },
-  { id: 9, name: 'Deutsch-Jozsa Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
-  { id: 10, name: 'Entanglement Swapping Circuit', message: '', circuit: '(0, 0): ───H───@───M(\'m\')───' },
-];
-
-// Styled components
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  background-color: #f8f9fa;
-`;
-
-const CircuitList = styled.div`
-  flex: 1;
-  background-color: rgba(255, 255, 255, 0.7);
-  color: #343a40;
-  padding: 20px;
-  overflow-y: auto;
-  border-right: 2px solid #dee2e6;
-  backdrop-filter: blur(10px);
-`;
-
-const CircuitButton = styled.button`
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: rgba(52, 58, 64, 0.8);
-  border: none;
-  cursor: pointer;
-  color: white;
-  text-align: left;
-  font-size: 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: rgba(52, 58, 64, 0.9);
-  }
-`;
-
-const CircuitDetails = styled.div`
-  flex: 3;
-  padding: 40px;
-  overflow-y: auto;
-  background-color: #ffffff;
-  border-left: 2px solid #dee2e6;
-`;
-
-const Title = styled.h2`
-  margin-top: 0;
-  color: #343a40;
-`;
-
-const Info = styled.div`
-  margin-bottom: 20px;
-  font-size: 18px;
-  color: #495057;
-  line-height: 1.5;
-
-  code {
-    background: #f1f1f1;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: 'Courier New', Courier, monospace;
-  }
-`;
-
-const Error = styled.h1`
-  color: red;
-`;
-
-// Styled components for the quantum circuit visualization
-const QuantumCircuitContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 20px;
-  background-color: #fff;
-  border: 2px solid #343a40;
-  border-radius: 10px;
-  width: fit-content;
-`;
-
-const QubitLine = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const Qubit = styled.div`
-  width: 20px;
-  height: 20px;
-  border: 1px solid #343a40;
-  border-radius: 50%;
-  margin-right: 10px;
-  background-color: #343a40;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-`;
-
-const Operation = styled.div`
-  padding: 5px 10px;
-  background-color: ${({ type }) => (type === 'measurement' ? '#28a745' : '#007bff')};
-  color: white;
-  margin-right: 10px;
-  border-radius: 5px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-// QuantumCircuit Component
-const QuantumCircuit = ({ circuit }) => {
-  // Parse the circuit string to extract gates and measurements
-  const operations = circuit.match(/X\^0\.5|M\('m'\)|H|X|Y|Z|S|T/g) || [];
-
-  return (
-    <QuantumCircuitContainer>
-      <QubitLine>
-        <Qubit>Q0</Qubit>
-        {operations.map((op, idx) => (
-          <Operation key={idx} type={op.startsWith('M') ? 'measurement' : 'gate'}>
-            {op}
-          </Operation>
-        ))}
-      </QubitLine>
-    </QuantumCircuitContainer>
-  );
-};
 
 export default function CircuitsPage() {
   const [selectedCircuit, setSelectedCircuit] = useState<Circuit | null>(null);
 
-  const [setupCircuit, { data: setupData, isError: setupError }] = useSetupCircuitMutation();
-  const [runCircuit, { data: runData, isError: runError }] = useRunCircuitMutation();
+const { data: simplestQuantamCircuteData,error } = useSimpleQuantumCircuitQuery(undefined, {
+  skip: selectedCircuit?.id !== 2,
+});
+console.log({simplestQuantamCircuteData,error})
   const { data: bellStateData } = useBellStateCircuitQuery(undefined, {
     skip: selectedCircuit?.id !== 3,
   });
@@ -195,22 +49,6 @@ export default function CircuitsPage() {
     skip: selectedCircuit?.id !== 10,
   });
 
-  useEffect(() => {
-    if (selectedCircuit) {
-      const runSelectedCircuit = async () => {
-        try {
-          const setupResult = await setupCircuit(selectedCircuit).unwrap();
-          if (setupResult) {
-            await runCircuit(setupResult).unwrap();
-          }
-        } catch (error) {
-          console.error("An error occurred during the run process:", error);
-        }
-      };
-
-      runSelectedCircuit();
-    }
-  }, [selectedCircuit, runCircuit, setupCircuit]);
 
   const handleCircuitClick = (circuit: Circuit) => {
     setSelectedCircuit(circuit);
@@ -228,18 +66,13 @@ export default function CircuitsPage() {
       <CircuitDetails>
         {selectedCircuit ? (
           <>
-            {setupData && (
+              {simplestQuantamCircuteData && selectedCircuit.id === 2 && (
               <>
-                <Title>Setup Result:</Title>
-                <Info>{setupData.message}</Info>
-                <Info>{setupData.circuit}</Info>
-              </>
-            )}
-            {runData && (
-              <>
-                <Title>Run Result:</Title>
-                <Info>{runData.message}</Info>
-                <Info>{runData.circuit}</Info>
+                <Title>Simplest Quantam Circuit Result:</Title>
+                <Info>{simplestQuantamCircuteData.name}</Info>
+                <Info>{simplestQuantamCircuteData.description}</Info>
+                <Info>Circuit: {simplestQuantamCircuteData.circuit}</Info>
+                <Info>Results: {JSON.stringify(simplestQuantamCircuteData.results)}</Info>
               </>
             )}
             {bellStateData && selectedCircuit.id === 3 && (
@@ -319,8 +152,6 @@ export default function CircuitsPage() {
         ) : (
           <Title>Select a circuit to see its details.</Title>
         )}
-        {setupError && <Error>Error in setting up the circuit</Error>}
-        {runError && <Error>Error in running the circuit</Error>}
       </CircuitDetails>
     </Container>
   );
