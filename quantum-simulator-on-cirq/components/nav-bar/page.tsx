@@ -18,6 +18,7 @@ const Navbar: FC = () => {
       <NavLinks>
         <NavItem href="/" isactive={pathname === '/'}>Home</NavItem>
         <NavItem href="/circuits" isactive={pathname === '/circuits'}>Circuits</NavItem>
+        <NavItem href="/circuitskeys" isactive={pathname === '/circuitskeys'}>Circuits keys</NavItem>
         <NavItem href="/gates" isactive={pathname === '/gates'}>Gates</NavItem>
         <NavItem href="/blochSphere" isactive={pathname === '/blochSphere'}>BlochSphere</NavItem>
       </NavLinks>
