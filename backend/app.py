@@ -1,3 +1,5 @@
+import base64
+import io
 from flask import Flask, jsonify, request
 import subprocess
 import sys
@@ -15,6 +17,9 @@ from controllers.circuits.phase_estimation import create_phase_estimation_circui
 from controllers.circuits.deutsch_jozsa import create_deutsch_jozsa_circuit
 from controllers.circuits.entanglement_swapping import run_entanglement_swapping
 from controllers.circuits.circuit_info import get_circuit_info
+from qiskit import QuantumCircuit
+from cirq.ops import XPowGate, YPowGate, ZPowGate, HPowGate, MeasurementGate
+from qiskit.visualization import circuit_drawer
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -33,6 +38,56 @@ def run_circuit(circuit):
     simulator = cirq.Simulator()
     result = simulator.run(circuit, repetitions=100)
     return result
+
+
+def cirq_to_qiskit(cirq_circuit: cirq.Circuit) -> QuantumCircuit:
+    # Create a Qiskit circuit with the same number of qubits as in the Cirq circuit
+    qubit_count = max(op.qubits[0].row + 1 for op in cirq_circuit.all_operations())
+    qiskit_circuit = QuantumCircuit(
+        qubit_count, qubit_count
+    )  # Add classical bits to the circuit
+
+    # Translate Cirq operations to Qiskit
+    for moment in cirq_circuit:
+        for op in moment.operations:
+            qubit_index = op.qubits[0].row
+
+            # Gate translations
+            if isinstance(op.gate, XPowGate):
+                # Cirq XPowGate corresponds to Qiskit X gate (notating power)
+                exponent = (
+                    op.gate.exponent if op.gate.exponent != 1 else 1
+                )  # Handle powers
+                qiskit_circuit.x(qubit_index) if exponent == 1 else qiskit_circuit.rx(
+                    exponent * 180, qubit_index
+                )
+
+            elif isinstance(op.gate, YPowGate):
+                exponent = op.gate.exponent if op.gate.exponent != 1 else 1
+                qiskit_circuit.y(qubit_index) if exponent == 1 else qiskit_circuit.ry(
+                    exponent * 180, qubit_index
+                )
+
+            elif isinstance(op.gate, ZPowGate):
+                exponent = op.gate.exponent if op.gate.exponent != 1 else 1
+                qiskit_circuit.z(qubit_index) if exponent == 1 else qiskit_circuit.rz(
+                    exponent * 180, qubit_index
+                )
+
+            elif isinstance(op.gate, HPowGate):
+                exponent = op.gate.exponent if op.gate.exponent != 1 else 1
+                qiskit_circuit.h(qubit_index) if exponent == 1 else qiskit_circuit.u3(
+                    180, 0, exponent * 180, qubit_index
+                )
+
+            elif isinstance(op.gate, MeasurementGate):
+                # In Cirq, measurements are handled differently, so we need to handle this explicitly.
+                # Qiskit measures a qubit and stores the result in a classical bit.
+                qiskit_circuit.measure(
+                    qubit_index, qubit_index
+                )  # Store the measurement result in a classical bit
+
+    return qiskit_circuit
 
 
 @app.before_request
@@ -282,18 +337,18 @@ def basic_gates_circuit():
     circuit = data["circuit"]
     code = data["code"]
     result = run_circuit(circuit)
-
     result_dict = result.histogram(key="result")
-
-    # Annotated circuit description
-    circuit_description = """
-    This circuit demonstrates basic quantum gates.
-    Gate Operations:
-    - H (Hadamard Gate): Applies a Hadamard operation putting a qubit into superposition.
-    - X (Pauli-X Gate): Flips the state of a qubit.
-    - Z (Pauli-Z Gate): Applies a phase flip.
-    """
-
+    # Convert Cirq circuit to Qiskit for visualization
+    qiskit_circuit = cirq_to_qiskit(circuit)
+    # Generate image of the circuit
+    circuit_image = circuit_drawer(qiskit_circuit, output="mpl")
+    # Save the image to a BytesIO object
+    img_byte_arr = io.BytesIO()
+    circuit_image.savefig(img_byte_arr, format="PNG")
+    img_byte_arr.seek(0)
+    # Encode the image in base64 to include it in the JSON response
+    img_base64 = base64.b64encode(img_byte_arr.read()).decode("utf-8")
+    circuit_description = """ This circuit demonstrates basic quantum gates. Gate Operations: - H (Hadamard Gate): Applies a Hadamard operation putting a qubit into superposition. - X (Pauli-X Gate): Flips the state of a qubit. - Z (Pauli-Z Gate): Applies a phase flip. """
     return jsonify(
         {
             "name": "Basic Gates Circuit",
@@ -301,6 +356,7 @@ def basic_gates_circuit():
             "circuit": str(circuit),
             "results": result_dict,
             "code": code,
+            "image": img_base64,
         }
     )
 
