@@ -32,6 +32,7 @@ const Nav = styled.nav`
   align-items: center;
   padding: 10px 20px;
   background-color: #fff;
+  z-index: 1000;
 `;
 
 const ProjectName = styled.div`
