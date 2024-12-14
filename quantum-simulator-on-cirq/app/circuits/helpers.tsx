@@ -19,6 +19,7 @@ const StyledButton = styled.button`
     background-color: #3700b3;
   }
 `;
+const ImageContainer = styled.img``;
 
 const QuantumCircuit: React.FC<{ circuit: string }> = ({ circuit }) => {
   const operations = circuit.match(/X\^0\.5|M\('m'\)|H|X|Y|Z|S|T/g) || [];
@@ -36,6 +37,7 @@ const QuantumCircuit: React.FC<{ circuit: string }> = ({ circuit }) => {
     </QuantumCircuitContainer>
   );
 };
+
 
 export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: number; indexNumber: number }> = ({ circuitData, circuitId, indexNumber }) => {
   const [showName, setShowName] = useState(false);
@@ -66,6 +68,8 @@ export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: 
       <Info>Circuit: {circuitData?.circuit}</Info>
       <QuantumCircuit circuit={circuitData?.circuit} />
 
+      <ImageContainer src={`data:image/png;base64,${circuitData?.image}`} alt="Quantum Circuit Diagram" />
+
       {showDescription && <Info>{circuitData?.description}</Info>}
       {showResults && <Info>Results: {JSON.stringify(circuitData?.results)}</Info>}
       {showCode && (
@@ -76,5 +80,6 @@ export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: 
     </>
   );
 };
+
 
 

@@ -1,5 +1,6 @@
 from flask import jsonify
 import cirq
+from controllers.helpers.qiskit import convertCirqCircuitToQiskitForVisualization
 
 code = """
 
@@ -61,7 +62,7 @@ def simple_quantum_circuit():
         simulator = cirq.Simulator()
         result = simulator.run(circuit, repetitions=20)
         result_json = {"measurements": result.measurements["m"].tolist()}
-
+        img_base64 = convertCirqCircuitToQiskitForVisualization(circuit)
         return jsonify(
             {
                 "name": "Simple Quantum Circuit",
@@ -69,6 +70,7 @@ def simple_quantum_circuit():
                 "circuit": str(circuit),
                 "results": result_json,
                 "code": code,
+                "image": img_base64,
             }
         )
 

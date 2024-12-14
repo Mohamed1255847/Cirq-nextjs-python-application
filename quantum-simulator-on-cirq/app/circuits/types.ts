@@ -4,6 +4,7 @@ export interface Circuit {
   code: string;
   description: string;
   results: string;
+  image: string;
 }
 
 export interface CircuitInfoType {
