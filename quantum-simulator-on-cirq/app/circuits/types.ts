@@ -1,8 +1,14 @@
 export interface Circuit {
-    id: number;
-    name: string;
-    message: string;
-    circuit: string;
-  }
-  
-  
+  name: string;
+  circuit: string;
+  code: string;
+  description: string;
+  results: string;
+}
+
+export interface CircuitInfoType {
+  id: number;
+  name: string;
+  message: string;
+  circuit: string;
+}

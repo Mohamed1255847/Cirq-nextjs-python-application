@@ -86,7 +86,9 @@ def t_gate_info():
 
 @app.route("/bellStateCircuit", methods=["GET"])
 def bell_state_circuit():
-    circuit = create_bell_state_circuit()
+    data = create_bell_state_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
     result = run_circuit(circuit)
     result_dict = result.histogram(key="result")
 
@@ -106,13 +108,16 @@ def bell_state_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
 
 @app.route("/qftCircuit", methods=["GET"])
 def qft_circuit():
-    circuit = create_qft_circuit()
+    data = create_qft_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
     result = run_circuit(circuit)
     result_dict = result.histogram(key="result")
 
@@ -130,19 +135,24 @@ def qft_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
 
 @app.route("/teleportationCircuit", methods=["GET"])
 def teleportation_circuit():
-    circuit = create_teleportation_circuit()
+    data = create_teleportation_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
     simulator = cirq.Simulator()
     result = simulator.run(circuit)
-    
+
     # Get the multi-measurement histogram and convert keys to strings
     raw_result_dict = result.multi_measurement_histogram(keys=["m_qubit0", "m_qubit1"])
-    result_dict = {" ".join(map(str, key)): value for key, value in raw_result_dict.items()}
+    result_dict = {
+        " ".join(map(str, key)): value for key, value in raw_result_dict.items()
+    }
 
     circuit_description = """ This circuit demonstrates quantum teleportation, transferring a quantum state from one qubit to another. Gate Operations: - H (Hadamard Gate): Applies a Hadamard operation putting a qubit into superposition. - @ (CNOT Gate Control): Control qubit for the CNOT operation. - X (CNOT Gate Target): Target qubit for the CNOT operation. - M (Measurement): Measures the state of the qubit. """
     return jsonify(
@@ -151,14 +161,17 @@ def teleportation_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
 
-
 @app.route("/vqeCircuit", methods=["GET"])
 def vqe_circuit():
-    circuit = create_vqe_circuit()
+    data = create_vqe_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
+
     result = run_circuit(circuit)
     result_dict = result.histogram(key="result")
 
@@ -175,13 +188,16 @@ def vqe_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
 
 @app.route("/phaseEstimationCircuit", methods=["GET"])
 def phase_estimation_circuit():
-    circuit = create_phase_estimation_circuit()
+    data = create_phase_estimation_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
     result = run_circuit(circuit)
     result_dict = result.histogram(key="result")
 
@@ -199,14 +215,16 @@ def phase_estimation_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
 
-
 @app.route("/deutschJozsaCircuit", methods=["GET"])
 def deutsch_jozsa_circuit():
-    circuit = create_deutsch_jozsa_circuit()
+    data = create_deutsch_jozsa_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
     result = run_circuit(circuit)
     result_dict = result.histogram(key="result")
 
@@ -224,6 +242,7 @@ def deutsch_jozsa_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
@@ -233,6 +252,7 @@ def entanglement_swapping_circuit():
     data = run_entanglement_swapping()
     result = data["result"]
     circuit = data["circuit"]
+    code = data["code"]
     result_dict = result.histogram(key="m1")
 
     circuit_description = """
@@ -251,14 +271,18 @@ def entanglement_swapping_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
 
 @app.route("/basicGatesCircuit", methods=["GET"])
 def basic_gates_circuit():
-    circuit = create_basic_gates_circuit()
+    data = create_basic_gates_circuit()
+    circuit = data["circuit"]
+    code = data["code"]
     result = run_circuit(circuit)
+
     result_dict = result.histogram(key="result")
 
     # Annotated circuit description
@@ -276,6 +300,7 @@ def basic_gates_circuit():
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
+            "code": code,
         }
     )
 
