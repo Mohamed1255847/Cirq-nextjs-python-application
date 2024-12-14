@@ -16,6 +16,8 @@
     "@react-three/drei": "^9.120.4",
     "@react-three/fiber": "^8.17.10",
     "@reduxjs/toolkit": "^2.3.0",
+    "@tsparticles/engine": "^3.7.1",
+    "@tsparticles/react": "^3.0.0",
     "install": "^0.13.0",
     "katex": "^0.16.11",
     "mathjs": "^14.0.0",

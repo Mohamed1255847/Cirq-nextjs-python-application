@@ -15,7 +15,7 @@ from controllers.circuits.phase_estimation import create_phase_estimation_circui
 from controllers.circuits.deutsch_jozsa import create_deutsch_jozsa_circuit
 from controllers.circuits.entanglement_swapping import run_entanglement_swapping
 from controllers.circuits.circuit_info import get_circuit_info
-from controllers.helpers.qiskit import convertCirqCircuitToQiskitForVisualization
+from controllers.helpers.qiskit import convertCirqCircuitToQiskitForVisualization,convertCirqCircuitToQiskitForVisualizationForBellState
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -92,7 +92,7 @@ def bell_state_circuit():
     code = data["code"]
     result = run_circuit(circuit)
     result_dict = result.histogram(key="result")
-    img_base64 = convertCirqCircuitToQiskitForVisualization(circuit)
+    img_base64 = convertCirqCircuitToQiskitForVisualizationForBellState(circuit)
     # Annotated circuit description
     circuit_description = """
     This circuit creates a Bell state, entangling two qubits.

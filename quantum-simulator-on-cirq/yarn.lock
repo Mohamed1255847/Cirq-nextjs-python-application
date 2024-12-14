@@ -1174,6 +1174,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsparticles/engine@npm:^3.7.1":
+  version: 3.7.1
+  resolution: "@tsparticles/engine@npm:3.7.1"
+  checksum: 10c0/01abfe83330d0ec288152e88ed9d925ecd147da8d87a1078565aa5d4f6acaf27db7a79d6f64f2415b61d1a0e355927dde9209919e73700a387d034d29059425e
+  languageName: node
+  linkType: hard
+
+"@tsparticles/react@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@tsparticles/react@npm:3.0.0"
+  peerDependencies:
+    "@tsparticles/engine": ^3.0.2
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10c0/3fd268b8e6f1dcbbb7acc36ef9d4f45e666b8f1169612594e7113cb56429abb5d2f564491efb5b26b22a7123188275c62fbd63fc3474a4246e1e12f77d5dbac5
+  languageName: node
+  linkType: hard
+
 "@tufjs/canonical-json@npm:2.0.0":
   version: 2.0.0
   resolution: "@tufjs/canonical-json@npm:2.0.0"
@@ -5260,6 +5278,8 @@ __metadata:
     "@react-three/drei": "npm:^9.120.4"
     "@react-three/fiber": "npm:^8.17.10"
     "@reduxjs/toolkit": "npm:^2.3.0"
+    "@tsparticles/engine": "npm:^3.7.1"
+    "@tsparticles/react": "npm:^3.0.0"
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
