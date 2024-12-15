@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { QuantumCircuitContainer, QubitLine, Qubit, Operation, Info, Title } from './parts';
+import { Info, Title } from './parts';
 import { Circuit } from './types';
 import { CodeBlock, CodeContainerStyle } from '@/components/code-block-component';
+import ReactMarkdown from 'react-markdown';
 
 const StyledButton = styled.button`
   background-color: #6200ea;
@@ -19,27 +20,57 @@ const StyledButton = styled.button`
     background-color: #3700b3;
   }
 `;
+
 const ImageContainer = styled.img``;
 
-const QuantumCircuit: React.FC<{ circuit: string }> = ({ circuit }) => {
-  const operations = circuit.match(/X\^0\.5|M\('m'\)|H|X|Y|Z|S|T/g) || [];
+const CircuitContainer = styled.div`
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px 0;
+  font-family: 'Courier New', Courier, monospace; 
+  font-size: 18px; /* Increase the font size */ 
+  line-height: 1.6; /* Increase line height for clarity */
+`;
 
-  return (
-    <QuantumCircuitContainer>
-      <QubitLine>
-        <Qubit>Q0</Qubit>
-        {operations.map((op, idx) => (
-          <Operation key={idx} type={op.startsWith('M') ? 'measurement' : 'gate'}>
-            {op}
-          </Operation>
-        ))}
-      </QubitLine>
-    </QuantumCircuitContainer>
-  );
-};
+interface QuantumCircuitDisplayProps {
+  circuit: string;
+}
 
+const QuantumCircuitDisplay: React.FC<QuantumCircuitDisplayProps> = ({ circuit }) => (
+  <CircuitContainer>
+    <ReactMarkdown>{`\`\`\`\n${circuit}\n\`\`\``}</ReactMarkdown>
+  </CircuitContainer>
+);
 
-export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: number; indexNumber: number }> = ({ circuitData, circuitId, indexNumber }) => {
+// interface QuantumCircuitProps {
+//   circuit: string;
+// }
+
+// const QuantumCircuit: React.FC<QuantumCircuitProps> = ({ circuit }) => {
+//   const operations = circuit.match(/X\^0\.5|M\('m'\)|H|X|Y|Z|S|T/g) || [];
+
+//   return (
+//     <QuantumCircuitContainer>
+//       <QubitLine>
+//         <Qubit>Q0</Qubit>
+//         {operations.map((op, idx) => (
+//           <Operation key={idx} type={op.startsWith('M') ? 'measurement' : 'gate'}>
+//             {op}
+//           </Operation>
+//         ))}
+//       </QubitLine>
+//     </QuantumCircuitContainer>
+//   );
+// };
+
+interface CircuitBlockComponentProps {
+  circuitData: Circuit;
+  circuitId: number;
+  indexNumber: number;
+}
+
+export const CircuitBlockComponent: React.FC<CircuitBlockComponentProps> = ({ circuitData, circuitId, indexNumber }) => {
   const [showDescription, setShowDescription] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [showCode, setShowCode] = useState(false);
@@ -62,7 +93,8 @@ export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: 
       </StyledButton>
 
       <Info>Circuit: {circuitData?.circuit}</Info>
-      <QuantumCircuit circuit={circuitData?.circuit} />
+      <QuantumCircuitDisplay circuit={circuitData?.circuit} />
+      {/* <QuantumCircuit circuit={circuitData?.circuit} /> */}
 
       <ImageContainer src={`data:image/png;base64,${circuitData?.image}`} alt="Quantum Circuit Diagram" />
 
@@ -76,6 +108,3 @@ export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: 
     </>
   );
 };
-
-
-
