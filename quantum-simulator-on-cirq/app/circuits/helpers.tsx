@@ -40,7 +40,6 @@ const QuantumCircuit: React.FC<{ circuit: string }> = ({ circuit }) => {
 
 
 export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: number; indexNumber: number }> = ({ circuitData, circuitId, indexNumber }) => {
-  const [showName, setShowName] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [showCode, setShowCode] = useState(false);
@@ -51,10 +50,7 @@ export const CircuitBlockComponent: React.FC<{ circuitData: Circuit; circuitId: 
 
   return circuitData && circuitId === indexNumber && (
     <>
-      {showName && <Title>{circuitData?.name}:</Title>}
-      <StyledButton onClick={() => setShowName(!showName)}>
-        {showName ? 'Hide Name' : 'Show Name'}
-      </StyledButton>
+      <Title>{circuitData?.name}:</Title>
       <StyledButton onClick={() => setShowDescription(!showDescription)}>
         {showDescription ? 'Hide Description' : 'Show Description'}
       </StyledButton>

@@ -47,9 +47,8 @@ def bell_state_circuit():
 
 def create_bell_state_circuit():
     qubits = [cirq.NamedQubit("q0"), cirq.NamedQubit("q1")]
-    circuit = cirq.Circuit(
-        cirq.H(qubits[0]),
-        cirq.CNOT(qubits[0], qubits[1]),
-        cirq.measure(*qubits, key="result"),
-    )
+    circuit=cirq.Circuit()
+    circuit.append(cirq.H(qubits[0]))
+    circuit.append(cirq.CNOT(qubits[0], qubits[1]))
+    circuit.append(cirq.measure(*qubits, key="result"))
     return {"circuit": circuit, "code": code}

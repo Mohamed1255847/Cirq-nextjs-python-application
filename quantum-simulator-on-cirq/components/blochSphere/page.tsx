@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Sphere, Line, Html } from '@react-three/drei';
-import { multiply, abs, arg } from 'mathjs';
+import { abs, arg } from 'mathjs';
 
 interface Axis {
   from: [number, number, number];
