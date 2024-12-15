@@ -21,7 +21,7 @@ import { CircuitInfoType } from "./types";
    },
    {
      id: 3,
-     name: "QFT Circuit",
+     name: "Quantum Fourier Transform",
      message: "",
      circuit: "(0, 0): ───H───S───T───M('m')───",
    },
@@ -33,7 +33,7 @@ import { CircuitInfoType } from "./types";
    },
    {
      id: 5,
-     name: "VQE Circuit",
+     name: "Variational Quantum Eigensolver",
      message: "",
      circuit: "(0, 0): ───H───X───Y───Z───M('m')───",
    },

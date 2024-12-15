@@ -133,7 +133,7 @@ def qft_circuit():
 
     return jsonify(
         {
-            "name": "QFT Circuit",
+            "name": "Quantum Fourier Transform",
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
@@ -188,7 +188,7 @@ def vqe_circuit():
 
     return jsonify(
         {
-            "name": "VQE Circuit",
+            "name": "Variational Quantum Eigensolver",
             "description": circuit_description,
             "circuit": str(circuit),
             "results": result_dict,
