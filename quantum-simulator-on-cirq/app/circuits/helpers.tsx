@@ -29,7 +29,7 @@ const CircuitContainer = styled.div`
   border-radius: 10px;
   margin: 10px 0;
   font-family: 'Courier New', Courier, monospace; 
-  font-size: 18px; /* Increase the font size */ 
+  font-size: 30px; /* Increase the font size */ 
   line-height: 1.6; /* Increase line height for clarity */
 `;
 
