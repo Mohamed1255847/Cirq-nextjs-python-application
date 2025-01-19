@@ -24,6 +24,9 @@ const Navbar: FC = () => {
           <NavItem href="/blochSphere" isactive={pathname === '/blochSphere'}>
             BlochSphere
           </NavItem>
+          <NavItem href="/qfm" isactive={pathname === '/qfm'}>
+            QFM
+          </NavItem>
         </NavLinks>
       </Nav>
       {pathname === '/blochSphere' && <UnderDevelopmentLabel>Under Development</UnderDevelopmentLabel>}
