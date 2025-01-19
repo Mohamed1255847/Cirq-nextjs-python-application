@@ -1,101 +1,71 @@
-'use client';
-import React, { useState } from 'react';
-import ReactFlow, { Controls, Background } from 'reactflow';
-import 'reactflow/dist/style.css';
+'use client'
+import { useState } from 'react';
+import { Layout, Menu } from 'antd';
+import GeneralInfo from '@/components/GeneralInfo/page';
+import SimpleExample from '@/components/SimpleExample/page';
+import MeasureOnceQFA from '@/components/MeasureOnceQFA/page';
+import MeasureManyQFA from '@/components/MeasureManyQFA/page';
+import OneWayQFA from '@/components/OneWayQFA/page';
+import TwoWayQFA from '@/components/TwoWayQFA/page';
+import QFARestart from '@/components/QFARestart/page';
+import QFAControlLanguage from '@/components/QFAControlLanguage/page';
 
-export default function QFM() {
-    const [inputString, setInputString] = useState('');
-    const [result, setResult] = useState<{
-        result: string;
-        acceptance_probability: number;
-        automata: {
-            states: { id: string; label: string; type: string }[];
-            transitions: { id: string; source: string; target: string; label: string }[];
-        };
-    } | null>(null);
-    const [error, setError] = useState<string | null>(null);
+const { Content, Sider } = Layout;
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+const QFMPage = () => {
+    const [selectedTab, setSelectedTab] = useState('general-info');
 
-        // Validate input
-        if (!inputString || !/^[01]+$/.test(inputString)) {
-            setError('Input string must contain only 0s and 1s.');
-            return;
-        }
-
-        try {
-            const response = await fetch('http://localhost:5000/qfa', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ input_string: inputString }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            setResult(data);
-            setError(null); // Clear any previous errors
-        } catch (err) {
-            setError('An error occurred while simulating the QFA. Please try again.');
-            console.error(err);
+    const renderContent = () => {
+        switch (selectedTab) {
+            case 'general-info':
+                return <GeneralInfo />;
+            case 'simple-example':
+                return <SimpleExample />;
+            case 'measure-once':
+                return <MeasureOnceQFA />;
+            case 'measure-many':
+                return <MeasureManyQFA />;
+            case 'one-way-qfa':
+                return <OneWayQFA />;
+            case 'two-way-qfa':
+                return <TwoWayQFA />;
+            case 'qfa-restart':
+                return <QFARestart />;
+            case 'qfa-control-language':
+                return <QFAControlLanguage />;
+            default:
+                return <GeneralInfo />;
         }
     };
 
-    // Convert automata structure to React Flow nodes and edges
-    const nodes = result?.automata.states.map((state) => ({
-        id: state.id,
-        position: { x: Math.random() * 400, y: Math.random() * 400 }, // Random positions for simplicity
-        data: { label: state.label },
-        type: state.type,
-    })) || [];
-
-    const edges = result?.automata.transitions.map((transition) => ({
-        id: transition.id,
-        source: transition.source,
-        target: transition.target,
-        label: transition.label,
-        animated: true, // Animate transitions
-    })) || [];
-
     return (
-        <div className="App" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
-            <h1>Quantum Finite Automata Simulator</h1>
-            <form onSubmit={handleSubmit} style={{ marginBottom: '20px' }}>
-                    <input
-                        type="text"
-                        value={inputString}
-                        onChange={(e) => setInputString(e.target.value)}
-                        placeholder="Enter a string of 0s and 1s"
-                        style={{ marginLeft: '10px', padding: '5px' }}
-                    />
-                <button type="submit" style={{ marginLeft: '10px', padding: '5px 10px' }}>
-                    Simulate
-                </button>
-            </form>
-
-            {error && (
-                <div style={{ color: 'red', marginBottom: '20px' }}>
-                    <h2>Error:</h2>
-                    <p>{error}</p>
-                </div>
-            )}
-
-            {result && (
-                <div style={{ marginBottom: '20px' }}>
-                    <h2>Result:</h2>
-                    <pre>{JSON.stringify(result, null, 2)}</pre>
-                </div>
-            )}
-
-            <div style={{ width: '100%', height: '400px', border: '1px solid #ddd', borderRadius: '5px' }}>
-                <ReactFlow nodes={nodes} edges={edges}>
-                    <Background />
-                    <Controls />
-                </ReactFlow>
-            </div>
-        </div>
+        <Layout style={{ minHeight: '100vh' }}>
+            <Sider width={200} theme="light">
+                <Menu
+                    mode="inline"
+                    defaultSelectedKeys={['general-info']}
+                    style={{ height: '100%', borderRight: 0 }}
+                    onSelect={({ key }) => setSelectedTab(key as string)}
+                >
+                    <Menu.Item key="general-info">General Info</Menu.Item>
+                    <Menu.Item key="simple-example">Simple Example</Menu.Item>
+                    <Menu.SubMenu key="types" title="Types of QFMs">
+                        <Menu.Item key="measure-once">Measure-Once QFA</Menu.Item>
+                        <Menu.Item key="measure-many">Measure-Many QFA</Menu.Item>
+                        <Menu.Item key="one-way-qfa">One-Way QFA</Menu.Item>
+                        <Menu.Item key="two-way-qfa">Two-Way QFA</Menu.Item>
+                        <Menu.Item key="qfa-restart">QFA with Restart</Menu.Item>
+                        <Menu.Item key="qfa-control-language">QFA with Control Language</Menu.Item>
+                    </Menu.SubMenu>
+                </Menu>
+            </Sider>
+            <Layout>
+                <Content style={{ padding: '24px' }}>
+                    {renderContent()}
+                </Content>
+            </Layout>
+        </Layout>
     );
-}
+};
+
+export default QFMPage;

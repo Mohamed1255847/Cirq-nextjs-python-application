@@ -15,8 +15,19 @@ from controllers.circuits.phase_estimation import create_phase_estimation_circui
 from controllers.circuits.deutsch_jozsa import create_deutsch_jozsa_circuit
 from controllers.circuits.entanglement_swapping import run_entanglement_swapping
 from controllers.circuits.circuit_info import get_circuit_info
-from controllers.helpers.qiskit import convertCirqCircuitToQiskitForVisualization, convertCirqCircuitToQiskitForVisualizationForBellState
-from controllers.qfm.app import simulate_qfa
+from controllers.helpers.qiskit import (
+    convertCirqCircuitToQiskitForVisualization,
+    convertCirqCircuitToQiskitForVisualizationForBellState,
+)
+from controllers.qfm.app import (
+    simulate_mm_qfa,
+    simulate_mo_qfa,
+    simulate_one_way_qfa,
+    simulate_qfa_control_language,
+    simulate_qfa_restart,
+    simulate_two_way_qfa,
+)
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
@@ -356,19 +367,47 @@ def circuit_info(circuit_name):
         return jsonify({"error": "Circuit not found"}), 404
 
 
-@app.route("/qfa", methods=["POST"])
-def qfa_simulation():
-    """
-    Endpoint to simulate a Quantum Finite Automaton (QFA).
-    Expects a JSON payload with an input string.
-    """
+@app.route("/mo-qfa", methods=["POST"])
+def mo_qfa():
     data = request.json
     input_string = data.get("input_string", "")
-    if not input_string:
-        return jsonify({"error": "Input string is required."}), 400
+    return jsonify(simulate_mo_qfa(input_string))
 
-    result = simulate_qfa(input_string)
-    return jsonify(result)
+
+@app.route("/mm-qfa", methods=["POST"])
+def mm_qfa():
+    data = request.json
+    input_string = data.get("input_string", "")
+    return jsonify(simulate_mm_qfa(input_string))
+
+
+@app.route("/one-way-qfa", methods=["POST"])
+def one_way_qfa():
+    data = request.json
+    input_string = data.get("input_string", "")
+    return jsonify(simulate_one_way_qfa(input_string))
+
+
+@app.route("/two-way-qfa", methods=["POST"])
+def two_way_qfa():
+    data = request.json
+    input_string = data.get("input_string", "")
+    return jsonify(simulate_two_way_qfa(input_string))
+
+
+@app.route("/qfa-restart", methods=["POST"])
+def qfa_restart():
+    data = request.json
+    input_string = data.get("input_string", "")
+    return jsonify(simulate_qfa_restart(input_string))
+
+
+@app.route("/qfa-control-language", methods=["POST"])
+def qfa_control_language():
+    data = request.json
+    input_string = data.get("input_string", "")
+    return jsonify(simulate_qfa_control_language(input_string))
+
 
 if __name__ == "__main__":
     ensure_cirq_installed()
