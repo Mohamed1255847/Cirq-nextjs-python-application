@@ -2,12 +2,17 @@
 import { useState } from 'react';
 import { Input, Button, message } from 'antd';
 import axios from 'axios';
+import AutomataVisualization from '@/components/AutomataVisualization/page';
 
 const MOQFA = () => {
     const [inputString, setInputString] = useState('');
     const [result, setResult] = useState<{
         result: string;
         acceptance_probability: number;
+        automata: {
+            states: { id: string; label: string; type: string }[];
+            transitions: { id: string; source: string; target: string; label: string }[];
+        };
     } | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -55,6 +60,11 @@ const MOQFA = () => {
                 <div style={{ marginTop: '20px' }}>
                     <h2>Result:</h2>
                     <pre>{JSON.stringify(result, null, 2)}</pre>
+                    <h2>Automata Visualization:</h2>
+                    <AutomataVisualization
+                        states={result.automata.states}
+                        transitions={result.automata.transitions}
+                    />
                 </div>
             )}
         </div>
