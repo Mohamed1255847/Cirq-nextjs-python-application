@@ -6,13 +6,12 @@ def simulate_qfa(input_string):
     Args:
         input_string (str): Input string (e.g., '0101').
     Returns:
-        dict: Result of the simulation (accept/reject).
+        dict: Result of the simulation (accept/reject) and automata structure.
     """
     # Define the initial state |q0⟩
     initial_state = np.array([1, 0], dtype=complex)  # |q0⟩ = [1, 0]
 
     # Define transition matrices for input symbols '0' and '1'
-    # Example: Hadamard gate for '0', Pauli-X gate for '1'
     transition_0 = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2)  # Hadamard
     transition_1 = np.array([[0, 1], [1, 0]], dtype=complex)  # Pauli-X
 
@@ -34,4 +33,20 @@ def simulate_qfa(input_string):
 
     # Simulate acceptance/rejection based on the probability
     result = "accept" if np.random.rand() < acceptance_probability else "reject"
-    return {"result": result, "acceptance_probability": float(acceptance_probability)}
+
+    # Define the automata structure
+    automata_structure = {
+        "states": [
+            {"id": "q0", "label": "q0 (Start)", "type": "input"},
+            {"id": "q1", "label": "q1 (Accept)", "type": "output"},
+        ],
+        "transitions": [
+            {"id": "e0-1", "source": "q0", "target": "q1", "label": "0, 1"},
+        ],
+    }
+
+    return {
+        "result": result,
+        "acceptance_probability": float(acceptance_probability),
+        "automata": automata_structure,
+    }
