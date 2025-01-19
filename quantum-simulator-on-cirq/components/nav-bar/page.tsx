@@ -13,16 +13,21 @@ const Navbar: FC = () => {
   const pathname = usePathname();
 
   return (
-    <Nav>
-      <ProjectName>Marvelous Quantum</ProjectName>
-      <NavLinks>
-        <NavItem href="/" isactive={pathname === '/'}>Home</NavItem>
-        <NavItem href="/circuits" isactive={pathname === '/circuits'}>Circuits</NavItem>
-        <NavItem href="/circuitskeys" isactive={pathname === '/circuitskeys'}>Circuits keys</NavItem>
-        <NavItem href="/gates" isactive={pathname === '/gates'}>Gates</NavItem>
-        <NavItem href="/blochSphere" isactive={pathname === '/blochSphere'}>BlochSphere</NavItem>
-      </NavLinks>
-    </Nav>
+    <>
+      <Nav>
+        <ProjectName>Marvelous Quantum</ProjectName>
+        <NavLinks>
+          <NavItem href="/" isactive={pathname === '/'}>Home</NavItem>
+          <NavItem href="/circuits" isactive={pathname === '/circuits'}>Circuits</NavItem>
+          <NavItem href="/circuitskeys" isactive={pathname === '/circuitskeys'}>Circuits keys</NavItem>
+          <NavItem href="/gates" isactive={pathname === '/gates'}>Gates</NavItem>
+          <NavItem href="/blochSphere" isactive={pathname === '/blochSphere'}>
+            BlochSphere
+          </NavItem>
+        </NavLinks>
+      </Nav>
+      {pathname === '/blochSphere' && <UnderDevelopmentLabel>Under Development</UnderDevelopmentLabel>}
+    </>
   );
 };
 
@@ -46,7 +51,7 @@ const NavLinks = styled.div`
   gap: 20px;
 `;
 
-const NavItem = styled(Link)<NavLinkProps>`
+const NavItem = styled(Link) <NavLinkProps>`
   color: #000;
   text-decoration: none;
   font-size: 1.2em;
@@ -54,10 +59,24 @@ const NavItem = styled(Link)<NavLinkProps>`
   border-bottom: ${({ isactive }) => (isactive ? '2px solid #000' : '2px solid transparent')};
   padding-bottom: 5px;
   transition: border-bottom 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   &:hover {
     border-bottom: 2px solid #000;
   }
+`;
+
+const UnderDevelopmentLabel = styled.div`
+  width: 100%;
+  height: 60px;
+  background-color: #0d44da;
+  color: #ffffff;
+  font-size: 3em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-align: center;
 `;
 
 export default Navbar;
