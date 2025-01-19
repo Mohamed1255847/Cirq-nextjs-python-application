@@ -39,12 +39,24 @@ const MOQFA = () => {
         <div>
             <h1>Measure-Once Quantum Finite Automata (MO-QFA)</h1>
             <p>
-                MO-QFA performs a single measurement at the end of the computation.
-                It is defined by the following transition matrices:
-                <pre>
-                    T(0) = [[1, 1], [1, -1]] / √2 (Hadamard)
-                    T(1) = [[0, 1], [1, 0]] (Pauli-X)
-                </pre>
+                <strong>Description:</strong> MO-QFA performs a single measurement at the end of the computation.
+                It is defined by a set of states, transition matrices, and an accepting state.
+            </p>
+            <p>
+                <strong>Use Cases:</strong> MO-QFA is useful for problems where a single decision is made after processing the entire input.
+                Examples include language recognition and decision problems.
+            </p>
+            <p>
+                <strong>Problem and Solution:</strong> Consider the problem of recognizing the language of strings with an even number of 1s.
+                MO-QFA can solve this by transitioning between states based on the input symbols and accepting if the final state corresponds to an even count.
+            </p>
+            <p>
+                <strong>Why `0` and `1`:</strong> In quantum computing, `0` and `1` represent the basis states of a qubit.
+                Quantum automata use these symbols to define transitions and measurements.
+            </p>
+            <p>
+                <strong>Quantum vs. Classical:</strong> Unlike classical automata, quantum automata can exist in superpositions of states, allowing them to process multiple paths simultaneously.
+                This gives quantum automata an advantage in certain computational tasks.
             </p>
             <Input
                 placeholder="Enter a string of 0s and 1s"

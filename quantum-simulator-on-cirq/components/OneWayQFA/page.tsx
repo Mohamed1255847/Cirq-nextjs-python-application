@@ -3,12 +3,17 @@
 import { useState } from 'react';
 import { Input, Button, message } from 'antd';
 import axios from 'axios';
+import AutomataVisualization from '@/components/AutomataVisualization/page';
 
 const OneWayQFA = () => {
     const [inputString, setInputString] = useState('');
     const [result, setResult] = useState<{
         result: string;
         acceptance_probability: number;
+        automata: {
+            states: { id: string; label: string; type: string }[];
+            transitions: { id: string; source: string; target: string; label: string }[];
+        };
     } | null>(null);
     const [loading, setLoading] = useState(false);
 
@@ -35,12 +40,24 @@ const OneWayQFA = () => {
         <div>
             <h1>One-Way Quantum Finite Automata (1QFA)</h1>
             <p>
-                1QFA processes input symbols in a single pass (left to right).
-                It is defined by the following transition matrices:
-                <pre>
-                    T(0) = [[1, 0, 0], [0, 0, 1], [0, 1, 0]] (Swap q1 and q2)
-                    T(1) = [[0, 1, 0], [1, 0, 0], [0, 0, 1]] (Swap q0 and q1)
-                </pre>
+                <strong>Description:</strong> 1QFA processes input symbols in a single pass (left to right).
+                It is defined by a set of states, transition matrices, and an accepting state.
+            </p>
+            <p>
+                <strong>Use Cases:</strong> 1QFA is useful for problems where the input is processed in a single pass.
+                Examples include streaming algorithms and real-time processing.
+            </p>
+            <p>
+                <strong>Problem and Solution:</strong> Consider the problem of recognizing the language of strings with an even number of 0s.
+                1QFA can solve this by transitioning between states based on the input symbols and accepting if the final state corresponds to an even count.
+            </p>
+            <p>
+                <strong>Why `0` and `1`:</strong> In quantum computing, `0` and `1` represent the basis states of a qubit.
+                Quantum automata use these symbols to define transitions and measurements.
+            </p>
+            <p>
+                <strong>Quantum vs. Classical:</strong> Unlike classical automata, quantum automata can exist in superpositions of states, allowing them to process multiple paths simultaneously.
+                This gives quantum automata an advantage in certain computational tasks.
             </p>
             <Input
                 placeholder="Enter a string of 0s and 1s"
@@ -56,6 +73,11 @@ const OneWayQFA = () => {
                 <div style={{ marginTop: '20px' }}>
                     <h2>Result:</h2>
                     <pre>{JSON.stringify(result, null, 2)}</pre>
+                    <h2>Automata Visualization:</h2>
+                    <AutomataVisualization
+                        states={result.automata.states}
+                        transitions={result.automata.transitions}
+                    />
                 </div>
             )}
         </div>
