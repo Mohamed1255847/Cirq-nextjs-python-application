@@ -1,26 +1,39 @@
-import numpy as np
 
 def simulate_mo_qfa(input_string):
     """
     Simulate a Measure-Once Quantum Finite Automaton (MO-QFA).
     """
-    initial_state = np.array([1, 0], dtype=complex)  # |q0⟩ = [1, 0]
-    transition_0 = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2)  # Hadamard
-    transition_1 = np.array([[0, 1], [1, 0]], dtype=complex)  # Pauli-X
-    accept_state = np.array([0, 1], dtype=complex)  # |q_accept⟩ = [0, 1]
+    # Initial state of the automaton: |q0⟩ = [1, 0]
+    initial_state = np.array([1, 0], dtype=complex)
 
+    # Transition matrices:
+    # transition_0: Hadamard gate (creates superposition)
+    transition_0 = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2)
+    # transition_1: Pauli-X gate (flips the state)
+    transition_1 = np.array([[0, 1], [1, 0]], dtype=complex)
+
+    # Accept state: |q_accept⟩ = [0, 1]
+    accept_state = np.array([0, 1], dtype=complex)
+
+    # Start with the initial state
     state = initial_state
+
+    # Process each symbol in the input string
     for symbol in input_string:
         if symbol == '0':
-            state = np.dot(transition_0, state)
+            state = np.dot(transition_0, state)  # Apply transition_0 for symbol '0'
         elif symbol == '1':
-            state = np.dot(transition_1, state)
+            state = np.dot(transition_1, state)  # Apply transition_1 for symbol '1'
         else:
             return {"error": "Invalid input symbol. Only '0' and '1' are allowed."}
 
+    # Calculate the acceptance probability
     acceptance_probability = np.abs(np.dot(accept_state.conj().T, state)) ** 2
+
+    # Decide to accept or reject based on the probability
     result = "accept" if np.random.rand() < acceptance_probability else "reject"
 
+    # Return the result, acceptance probability, and automaton description
     return {
         "result": result,
         "acceptance_probability": float(acceptance_probability),
@@ -35,27 +48,42 @@ def simulate_mo_qfa(input_string):
         },
     }
 
+
 def simulate_mm_qfa(input_string):
     """
     Simulate a Measure-Many Quantum Finite Automaton (MM-QFA).
     """
-    initial_state = np.array([1, 0, 0], dtype=complex)  # |q0⟩ = [1, 0, 0]
-    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)  # Swap q1 and q2
-    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)  # Swap q0 and q1
-    accept_state = np.array([0, 0, 1], dtype=complex)  # |q_accept⟩ = [0, 0, 1]
+    # Initial state of the automaton: |q0⟩ = [1, 0, 0]
+    initial_state = np.array([1, 0, 0], dtype=complex)
 
+    # Transition matrices:
+    # transition_0: Swaps q1 and q2
+    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)
+    # transition_1: Swaps q0 and q1
+    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)
+
+    # Accept state: |q_accept⟩ = [0, 0, 1]
+    accept_state = np.array([0, 0, 1], dtype=complex)
+
+    # Start with the initial state
     state = initial_state
+
+    # Process each symbol in the input string
     for symbol in input_string:
         if symbol == '0':
-            state = np.dot(transition_0, state)
+            state = np.dot(transition_0, state)  # Apply transition_0 for symbol '0'
         elif symbol == '1':
-            state = np.dot(transition_1, state)
+            state = np.dot(transition_1, state)  # Apply transition_1 for symbol '1'
         else:
             return {"error": "Invalid input symbol. Only '0' and '1' are allowed."}
 
+    # Calculate the acceptance probability
     acceptance_probability = np.abs(np.dot(accept_state.conj().T, state)) ** 2
+
+    # Decide to accept or reject based on the probability
     result = "accept" if np.random.rand() < acceptance_probability else "reject"
 
+    # Return the result, acceptance probability, and automaton description
     return {
         "result": result,
         "acceptance_probability": float(acceptance_probability),
@@ -75,28 +103,43 @@ def simulate_mm_qfa(input_string):
             ],
         },
     }
+
 
 def simulate_one_way_qfa(input_string):
     """
     Simulate a One-Way Quantum Finite Automaton (1QFA).
     """
-    initial_state = np.array([1, 0, 0], dtype=complex)  # |q0⟩ = [1, 0, 0]
-    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)  # Swap q1 and q2
-    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)  # Swap q0 and q1
-    accept_state = np.array([0, 0, 1], dtype=complex)  # |q_accept⟩ = [0, 0, 1]
+    # Initial state of the automaton: |q0⟩ = [1, 0, 0]
+    initial_state = np.array([1, 0, 0], dtype=complex)
 
+    # Transition matrices:
+    # transition_0: Swaps q1 and q2
+    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)
+    # transition_1: Swaps q0 and q1
+    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)
+
+    # Accept state: |q_accept⟩ = [0, 0, 1]
+    accept_state = np.array([0, 0, 1], dtype=complex)
+
+    # Start with the initial state
     state = initial_state
+
+    # Process each symbol in the input string
     for symbol in input_string:
         if symbol == '0':
-            state = np.dot(transition_0, state)
+            state = np.dot(transition_0, state)  # Apply transition_0 for symbol '0'
         elif symbol == '1':
-            state = np.dot(transition_1, state)
+            state = np.dot(transition_1, state)  # Apply transition_1 for symbol '1'
         else:
             return {"error": "Invalid input symbol. Only '0' and '1' are allowed."}
 
+    # Calculate the acceptance probability
     acceptance_probability = np.abs(np.dot(accept_state.conj().T, state)) ** 2
+
+    # Decide to accept or reject based on the probability
     result = "accept" if np.random.rand() < acceptance_probability else "reject"
 
+    # Return the result, acceptance probability, and automaton description
     return {
         "result": result,
         "acceptance_probability": float(acceptance_probability),
@@ -116,28 +159,43 @@ def simulate_one_way_qfa(input_string):
             ],
         },
     }
+
 
 def simulate_two_way_qfa(input_string):
     """
     Simulate a Two-Way Quantum Finite Automaton (2QFA).
     """
-    initial_state = np.array([1, 0, 0], dtype=complex)  # |q0⟩ = [1, 0, 0]
-    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)  # Swap q1 and q2
-    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)  # Swap q0 and q1
-    accept_state = np.array([0, 0, 1], dtype=complex)  # |q_accept⟩ = [0, 0, 1]
+    # Initial state of the automaton: |q0⟩ = [1, 0, 0]
+    initial_state = np.array([1, 0, 0], dtype=complex)
 
+    # Transition matrices:
+    # transition_0: Swaps q1 and q2
+    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)
+    # transition_1: Swaps q0 and q1
+    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)
+
+    # Accept state: |q_accept⟩ = [0, 0, 1]
+    accept_state = np.array([0, 0, 1], dtype=complex)
+
+    # Start with the initial state
     state = initial_state
+
+    # Process each symbol in the input string
     for symbol in input_string:
         if symbol == '0':
-            state = np.dot(transition_0, state)
+            state = np.dot(transition_0, state)  # Apply transition_0 for symbol '0'
         elif symbol == '1':
-            state = np.dot(transition_1, state)
+            state = np.dot(transition_1, state)  # Apply transition_1 for symbol '1'
         else:
             return {"error": "Invalid input symbol. Only '0' and '1' are allowed."}
 
+    # Calculate the acceptance probability
     acceptance_probability = np.abs(np.dot(accept_state.conj().T, state)) ** 2
+
+    # Decide to accept or reject based on the probability
     result = "accept" if np.random.rand() < acceptance_probability else "reject"
 
+    # Return the result, acceptance probability, and automaton description
     return {
         "result": result,
         "acceptance_probability": float(acceptance_probability),
@@ -158,25 +216,36 @@ def simulate_two_way_qfa(input_string):
         },
     }
 
+
 def simulate_qfa_restart(input_string):
     """
     Simulate a Quantum Finite Automaton with Restart (QFA-R).
     """
-    initial_state = np.array([1, 0, 0], dtype=complex)  # |q0⟩ = [1, 0, 0]
-    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)  # Swap q1 and q2
-    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)  # Swap q0 and q1
-    accept_state = np.array([0, 0, 1], dtype=complex)  # |q_accept⟩ = [0, 0, 1]
+    # Initial state of the automaton: |q0⟩ = [1, 0, 0]
+    initial_state = np.array([1, 0, 0], dtype=complex)
 
+    # Transition matrices:
+    # transition_0: Swaps q1 and q2
+    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)
+    # transition_1: Swaps q0 and q1
+    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)
+
+    # Accept state: |q_accept⟩ = [0, 0, 1]
+    accept_state = np.array([0, 0, 1], dtype=complex)
+
+    # Start with the initial state
     state = initial_state
+
+    # Process each symbol in the input string
     for symbol in input_string:
         if symbol == '0':
-            state = np.dot(transition_0, state)
+            state = np.dot(transition_0, state)  # Apply transition_0 for symbol '0'
         elif symbol == '1':
-            state = np.dot(transition_1, state)
+            state = np.dot(transition_1, state)  # Apply transition_1 for symbol '1'
         else:
             return {"error": "Invalid input symbol. Only '0' and '1' are allowed."}
 
-    # Restart condition: If the automata is in q1 after processing the input, it restarts.
+    # Restart condition: If the automaton is in state q1 after processing the input, it restarts.
     if np.argmax(state) == 1:  # If the state is q1
         return {
             "result": "restart",
@@ -198,9 +267,13 @@ def simulate_qfa_restart(input_string):
             },
         }
 
+    # Calculate the acceptance probability
     acceptance_probability = np.abs(np.dot(accept_state.conj().T, state)) ** 2
+
+    # Decide to accept or reject based on the probability
     result = "accept" if np.random.rand() < acceptance_probability else "reject"
 
+    # Return the result, acceptance probability, and automaton description
     return {
         "result": result,
         "acceptance_probability": float(acceptance_probability),
@@ -221,21 +294,32 @@ def simulate_qfa_restart(input_string):
         },
     }
 
+
 def simulate_qfa_control_language(input_string):
     """
     Simulate a Quantum Finite Automaton with Control Language (QFA-CL).
     """
-    initial_state = np.array([1, 0, 0], dtype=complex)  # |q0⟩ = [1, 0, 0]
-    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)  # Swap q1 and q2
-    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)  # Swap q0 and q1
-    accept_state = np.array([0, 0, 1], dtype=complex)  # |q_accept⟩ = [0, 0, 1]
+    # Initial state of the automaton: |q0⟩ = [1, 0, 0]
+    initial_state = np.array([1, 0, 0], dtype=complex)
 
+    # Transition matrices:
+    # transition_0: Swaps q1 and q2
+    transition_0 = np.array([[1, 0, 0], [0, 0, 1], [0, 1, 0]], dtype=complex)
+    # transition_1: Swaps q0 and q1
+    transition_1 = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 1]], dtype=complex)
+
+    # Accept state: |q_accept⟩ = [0, 0, 1]
+    accept_state = np.array([0, 0, 1], dtype=complex)
+
+    # Start with the initial state
     state = initial_state
+
+    # Process each symbol in the input string
     for symbol in input_string:
         if symbol == '0':
-            state = np.dot(transition_0, state)
+            state = np.dot(transition_0, state)  # Apply transition_0 for symbol '0'
         elif symbol == '1':
-            state = np.dot(transition_1, state)
+            state = np.dot(transition_1, state)  # Apply transition_1 for symbol '1'
         else:
             return {"error": "Invalid input symbol. Only '0' and '1' are allowed."}
 
@@ -247,6 +331,7 @@ def simulate_qfa_control_language(input_string):
         result = "reject"
         acceptance_probability = 0
 
+    # Return the result, acceptance probability, and automaton description
     return {
         "result": result,
         "acceptance_probability": float(acceptance_probability),
