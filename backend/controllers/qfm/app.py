@@ -1,3 +1,4 @@
+import numpy as np
 
 def simulate_mo_qfa(input_string):
     """
