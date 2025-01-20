@@ -2282,6 +2282,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-katex@npm:^3":
+  version: 3.0.4
+  resolution: "@types/react-katex@npm:3.0.4"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/919d5752eb5ea8e5eb72dde1cb2f2b3e0b0d7e74e463eb95a8da4a3a12478223b92e78c0b1bece53ce9e5404aa1a0ac63955ef1a4e00829080ad41808ee82538
+  languageName: node
+  linkType: hard
+
 "@types/react-reconciler@npm:^0.26.7":
   version: 0.26.7
   resolution: "@types/react-reconciler@npm:0.26.7"
@@ -5453,14 +5462,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"katex@npm:^0.16.11":
-  version: 0.16.15
-  resolution: "katex@npm:0.16.15"
+"katex@npm:^0.16.0, katex@npm:^0.16.21":
+  version: 0.16.21
+  resolution: "katex@npm:0.16.21"
   dependencies:
     commander: "npm:^8.3.0"
   bin:
     katex: cli.js
-  checksum: 10c0/bf1f553c7368821228c22d2cef61672fbaed96388226e27df1422925f8676502267343bcbad1fe4657d729390062c1009ac5fac952e987bc60531ce675049f84
+  checksum: 10c0/e2e4139ba72a13f2393308fbb2b4c5511611a19a40a6e39d956cf775e553af3517dbfd0a54477faaf401c923e4654e32296347846b8ff15dfa579f88ff8579bb
   languageName: node
   linkType: hard
 
@@ -7154,6 +7163,7 @@ __metadata:
     "@types/node": "npm:^20"
     "@types/react": "npm:^18"
     "@types/react-dom": "npm:^18"
+    "@types/react-katex": "npm:^3"
     "@types/react-syntax-highlighter": "npm:^15"
     "@types/react-typist": "npm:^2.0.6"
     antd: "npm:^5.23.1"
@@ -7161,13 +7171,14 @@ __metadata:
     eslint: "npm:^8"
     eslint-config-next: "npm:^14.2.16"
     install: "npm:^0.13.0"
-    katex: "npm:^0.16.11"
+    katex: "npm:^0.16.21"
     mathjs: "npm:^14.0.0"
     next: "npm:14.2.16"
     npm: "npm:^10.9.2"
     quantum-circuit-drawer: "npm:^1.0.0"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
+    react-katex: "npm:^3.0.1"
     react-markdown: "npm:^9.0.1"
     react-redux: "npm:^9.1.2"
     react-syntax-highlighter: "npm:^15.6.1"
@@ -7760,6 +7771,18 @@ __metadata:
   version: 19.0.0
   resolution: "react-is@npm:19.0.0"
   checksum: 10c0/d1be8e8500cf04f76df71942a21ef3a71266397a383d7ec8885f35190df818d35c65efd35aed7be47a89ad99aaff2c52e0c4e39e8930844a6b997622e50625a8
+  languageName: node
+  linkType: hard
+
+"react-katex@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "react-katex@npm:3.0.1"
+  dependencies:
+    katex: "npm:^0.16.0"
+  peerDependencies:
+    prop-types: ^15.8.1
+    react: ">=15.3.2 <=18"
+  checksum: 10c0/f11e78ed9983f97f2f7b5f2810a847ff559891e9a2dd4b78c7d3d7abb4ff8af62147dd82c25b7ab4e49ffb23314e106d93a5d4527a3ab6d5aa3e2b7a9bf1f39b
   languageName: node
   linkType: hard
 

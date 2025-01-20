@@ -9,6 +9,7 @@ import OneWayQFA from '@/components/OneWayQFA/page';
 import TwoWayQFA from '@/components/TwoWayQFA/page';
 import QFARestart from '@/components/QFARestart/page';
 import QFAControlLanguage from '@/components/QFAControlLanguage/page';
+import DFAExplanation from '@/components/DFA/page';
 
 const { Content, Sider } = Layout;
 
@@ -33,6 +34,8 @@ const QFMPage = () => {
                 return <QFARestart />;
             case 'qfa-control-language':
                 return <QFAControlLanguage />;
+            case 'DFA':
+                return <DFAExplanation />
             default:
                 return <GeneralInfo />;
         }
@@ -48,6 +51,7 @@ const QFMPage = () => {
                     onSelect={({ key }) => setSelectedTab(key as string)}
                 >
                     <Menu.Item key="general-info">General Info</Menu.Item>
+                    <Menu.Item key="DFA">DFA</Menu.Item>
                     <Menu.Item key="simple-example">Simple Example</Menu.Item>
                     <Menu.SubMenu key="types" title="Types of QFMs">
                         <Menu.Item key="measure-once">Measure-Once QFA</Menu.Item>
