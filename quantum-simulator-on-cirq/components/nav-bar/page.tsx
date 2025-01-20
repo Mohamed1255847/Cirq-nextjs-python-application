@@ -29,7 +29,7 @@ const Navbar: FC = () => {
           </NavItem>
         </NavLinks>
       </Nav>
-      {pathname === '/blochSphere' && <UnderDevelopmentLabel>Under Development</UnderDevelopmentLabel>}
+      {(pathname === '/blochSphere' || pathname === '/qfm') && <UnderDevelopmentLabel>Under Development</UnderDevelopmentLabel>}
     </>
   );
 };
